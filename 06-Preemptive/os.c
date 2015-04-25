@@ -159,3 +159,17 @@ void systick_handler(void)
 	}
 }
 
+int semihost_call(int service, void *opaque){
+    register int r0 __asm__("r0") = service;
+    register void *r1 __asm__("r1") = opaque;
+    register int result __asm__("r0");
+    __asm__("bkpt 0xab" : "=r"(result) : "r"(r0), "r"(r1): );
+    return result;
+}
+
+int svcall(){
+    register int result __asm__("r0");
+    __asm__("svc 0" : "=r"(result) ::);
+    return result;
+}
+
